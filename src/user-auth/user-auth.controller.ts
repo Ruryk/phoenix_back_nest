@@ -8,22 +8,22 @@ import { AuthGuard } from './auth.guard';
 export class UserAuthController {
   constructor(private readonly userAuthService: UserAuthService) {}
 
-  @Post('register')
-  async registerUser(
-    @Body() body: { username: string; password: string },
+  @Post('sign-up')
+  async signUpUser(
+    @Body() body: { email: string; password: string },
   ): Promise<{ message: string }> {
-    const { username, password } = body;
-    await this.userAuthService.registerUser(username, password);
-    return { message: 'User registered successfully' };
+    const { email, password } = body;
+    await this.userAuthService.signUpUser(email, password);
+    return { message: 'Sign-up successfully' };
   }
 
-  @Post('login')
-  async loginUser(
-    @Body() body: { username: string; password: string },
+  @Post('sign-in')
+  async singInUser(
+    @Body() body: { email: string; password: string },
   ): Promise<{ message: string; token: string }> {
-    const { username, password } = body;
-    const token = await this.userAuthService.loginUser(username, password);
-    return { message: 'Login successful', token };
+    const { email, password } = body;
+    const token = await this.userAuthService.singInUser(email, password);
+    return { message: 'Sign-in successful', token };
   }
 
   @Get('users')

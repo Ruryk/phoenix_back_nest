@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from './schemas/user-auth.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+
+import { User } from './schemas/user-auth.schema';
 
 @Injectable()
 export class UserAuthService {
@@ -18,28 +19,30 @@ export class UserAuthService {
     private jwtService: JwtService,
   ) {}
 
-  async registerUser(
-    username: string,
+  async signUpUser(
+    email: string,
     password: string,
   ): Promise<{ message: string }> {
     try {
       const hash = await bcrypt.hash(password, 10);
-      await this.userModel.create({ username, password: hash });
-      return { message: 'User registered successfully' };
+      await this.userModel.create({ email, password: hash });
+      return { message: 'User signed-up successfully' };
     } catch (error) {
-      throw new Error('An error occurred while registering the user');
+      console.error('Error during user registration:', error.message); // Log the error message
+
+      throw new Error('An error occurred while sign-up the user');
     }
   }
 
-  async loginUser(username: string, password: string): Promise<string> {
+  async singInUser(email: string, password: string): Promise<string> {
     try {
-      const user = await this.userModel.findOne({ username });
+      const user = await this.userModel.findOne({ email });
       if (!user) {
         throw new NotFoundException('User not found');
       }
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-        throw new UnauthorizedException('Invalid login credentials');
+        throw new UnauthorizedException('Invalid sign-in credentials');
       }
       const payload = { userId: user._id };
       const token = this.jwtService.sign(payload);

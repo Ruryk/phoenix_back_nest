@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { UserSettingsService } from './user.settings.service';
-import { UserThemeSettings } from './schemas/user-theme.schema';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { UserSettingsService } from '../user.settings.service';
+import { UserThemeSettings } from '../schemas/user-theme.schema';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '../../user-auth/auth.guard';
 
 @Controller('api/settings')
 export class UserSettingsController {
@@ -9,6 +10,7 @@ export class UserSettingsController {
               private readonly jwtService: JwtService) {}
 
   @Get('theme')
+  @UseGuards(AuthGuard)
   async getThemeSettings(
     @Req() request: Request
   ): Promise<UserThemeSettings | { message: string }> {
@@ -21,6 +23,7 @@ export class UserSettingsController {
   }
 
   @Post('theme')
+  @UseGuards(AuthGuard)
   async changeThemeSettings(
     @Req() request: Request,
     @Body() theme: UserThemeSettings

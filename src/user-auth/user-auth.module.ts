@@ -5,7 +5,7 @@ import { UserAuthService } from './user-auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './schemas/user-auth.schema';
 import { secretKey } from './config';
-import { UserSettingsController } from '../users-setting/user-settings.controller';
+import { UserSettingsController } from '../users-setting/controllers/user-settings.controller';
 import { UserSettingsService } from '../users-setting/user.settings.service';
 
 @Module({
